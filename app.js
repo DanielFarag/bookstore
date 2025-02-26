@@ -3,7 +3,10 @@ import { join, dirname } from 'path';
 import cookieParser from 'cookie-parser';
 import logger from 'morgan';
 
-import { connectDB }  from './infrastructure/services/index.js';
+import { connectDB, swaggerDocs }  from './infrastructure/services/index.js';
+import swaggerUi from "swagger-ui-express";
+
+
 
 import indexRouter from './routes/index.js';
 import usersRouter from './routes/users.js';
@@ -27,7 +30,9 @@ app.use(urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(join(__dirname, 'public')));
 
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
+
 app.use('/', indexRouter);
-app.use('/users', usersRouter);
+app.use('/api/users', usersRouter);
 
 export default app;
