@@ -1,6 +1,10 @@
 import { connect } from 'mongoose';
 
-export default () => connect('mongodb://localhost:27017/mydatabase')
+const HOST=process.env.MONGO_HOST
+const PORT=process.env.MONGO_PORT
+const DB=process.env.MONGO_DB
+
+export default () => connect(`mongodb://${HOST}:${PORT}/${DB}`)
 .then(() => console.log('MongoDB connected'))
 .catch(err => {
     console.error(err)
