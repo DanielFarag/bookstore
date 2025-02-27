@@ -3,5 +3,5 @@ import swaggerDocs from './swagger.js';
 
 export {
     connectDB,
-    swaggerDocs
+    swaggerDocs,
 };
