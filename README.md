@@ -1,7 +1,7 @@
 # BookStore
 
 ## Live Url
-- [ ] Live url.
+- [ ] [Live url](http://iti-bookstore.s3-website-us-east-1.amazonaws.com/).
 
 ## Tasks
 
