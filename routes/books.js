@@ -9,9 +9,19 @@ var router = Router();
 
 /**
  * @swagger
+ * tags:
+ *   - name: Books
+ *     description: Manage Books Resource
+ */
+
+
+/**
+ * @swagger
  * /api/books:
  *   get:
  *     summary: Retrieve a list of books
+ *     tags:
+ *       - Books 
  *     description: Get a list of all books available on the system.
  *     parameters:
  *       - in: query
@@ -66,6 +76,8 @@ router.get('/', asyncHandler(BookController.index));
  * /api/books/{id}:
  *   get:
  *     summary: Retrieve a book resource
+ *     tags:
+ *       - Books 
  *     description: Get a book resource using id.
  *     parameters:
  *       - name: id
@@ -106,6 +118,8 @@ router.get('/:id', asyncHandler(BookController.show));
  * /api/books:
  *   post:
  *     summary: Create a book
+ *     tags:
+ *       - Books 
  *     description: Create a new book.
  *     requestBody:
  *       required: true
@@ -191,6 +205,8 @@ router.post('/', validator(bookRequestSchema.create), asyncHandler(BookControlle
  * /api/books/{id}:
  *   put:
  *     summary: Update a book
+ *     tags:
+ *       - Books 
  *     description: Update a book.
  *     parameters:
  *       - name: id
@@ -251,6 +267,8 @@ router.put('/:id', asyncHandler(BookController.update));
  * /api/books/{id}:
  *   delete:
  *     summary: Delete a book
+ *     tags:
+ *       - Books 
  *     description: Delete a book.
  *     parameters:
  *       - name: id
