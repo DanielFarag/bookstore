@@ -5,12 +5,12 @@ import logger from 'morgan';
 import swaggerUi from "swagger-ui-express";
 
 
-import { connectDB, swaggerDocs }  from './infrastructure/services/index.js';
-import { NotFound, Validation, UserIs }  from './infrastructure/middlewares/index.js';
+import { connectDB, swaggerDocs }  from './src/infrastructure/services/index.js';
+import { NotFound, Validation, UserIs }  from './src/infrastructure/middlewares/index.js';
 
 
-import indexRouter from './routes/index.js';
-import booksRouter from './routes/books.js';
+import indexRouter from './src/routes/index.js';
+import booksRouter from './src/routes/books.js';
 
 import { fileURLToPath } from 'url';
 
