@@ -2,20 +2,24 @@ import express, { json, urlencoded } from 'express';
 import { join, dirname } from 'path';
 import cookieParser from 'cookie-parser';
 import logger from 'morgan';
-
-import { connectDB, swaggerDocs }  from './infrastructure/services/index.js';
 import swaggerUi from "swagger-ui-express";
 
 
+import { connectDB, swaggerDocs }  from './infrastructure/services/index.js';
+import { NotFound, Validation, UserIs }  from './infrastructure/middlewares/index.js';
+
 
 import indexRouter from './routes/index.js';
-import usersRouter from './routes/users.js';
+import booksRouter from './routes/books.js';
 
 import { fileURLToPath } from 'url';
+
+
+
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 
-var app = express();
+const app = express();
 
 connectDB()
 
@@ -30,9 +34,12 @@ app.use(urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(join(__dirname, 'public')));
 
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
-app.use('/', indexRouter);
-app.use('/api/users', usersRouter);
+app.use('/emails', indexRouter);
+app.use('/api/books', /* auth middleware then */ UserIs("admin"),  booksRouter);
+app.use('/', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
+
+app.use(Validation)
+app.use(NotFound)
 
 export default app;
