@@ -222,20 +222,24 @@ router.post('/', validator(bookRequestSchema.create), asyncHandler(BookControlle
  *           schema:
  *             type: object
  *             properties:
- *               name:
+ *               title:
  *                 type: string
- *                 example: "John Doe"
- *               email:
+ *                 example: "book title"
+ *               author:
  *                 type: string
- *                 format: email
- *                 example: "test@gmail.com"
- *               password:
+ *                 example: "Author Name"
+ *               price:
+ *                 type: number
+ *                 example: 50
+ *               stock:
+ *                 type: number
+ *                 example: 4
+ *               description:
  *                 type: string
- *                 format: password
- *                 example: "123456"
- *               role:
+ *                 example: "book description sample"
+ *               image:
  *                 type: string
- *                 example: "admin"
+ *                 example: "Image url"
  *     responses:
  *       201:
  *         description: A book resource.
@@ -257,7 +261,7 @@ router.post('/', validator(bookRequestSchema.create), asyncHandler(BookControlle
  *                   type: string
  *                   example: "admin"
  */
-router.put('/:id', asyncHandler(BookController.update));
+router.put('/:id', validator(bookRequestSchema.create), asyncHandler(BookController.update));
 
 
 

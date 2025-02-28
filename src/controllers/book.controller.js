@@ -1,12 +1,17 @@
-import { BookRepository } from "../repositories/index.js"
 import { BooksCollection, BookResource } from "../resources/index.js";
+import { Book } from "../models/index.js"
+import { throwIfNotFound } from "../infrastructure/helpers/index.js";
+
 
 export const index = async (req,res)=>{
-    const { query } = req;
+    let { page, perPage } = req.query;
 
-    const books = await BookRepository.fetchAll(query);
+    page = page ?? 1
+    perPage = perPage ?? 10
     
-    const booksCollection = BooksCollection(books, query)
+    const books = await Book.find().skip((page-1) * perPage).limit(perPage)
+
+    const booksCollection = BooksCollection(books, req.query)
 
     res.json(booksCollection);
 }
@@ -15,7 +20,9 @@ export const index = async (req,res)=>{
 export const show = async (req,res)=>{
     const { id } = req.params;
 
-    const book = await BookRepository.fetchOne(id);
+    const book = await Book.findOne({ _id: id})
+
+    throwIfNotFound(book);
 
     const bookResource = BookResource(book)
 
@@ -24,7 +31,23 @@ export const show = async (req,res)=>{
 
 
 export const store = async (req,res)=>{
-    const book = await BookRepository.create(req.body);
+    const {
+        title,
+        author,
+        price,
+        description,
+        stock,
+        image,
+    } = req.body
+
+    const book = await Book.insertOne({
+        title,
+        author,
+        price,
+        description,
+        stock,
+        image,
+    })
 
     const bookResource = BookResource(book)
 
@@ -35,7 +58,27 @@ export const store = async (req,res)=>{
 export const update = async (req,res)=>{
     const { id } = req.params
 
-    const book = await BookRepository.update(id, req.body);
+    const {
+        title,
+        author,
+        price,
+        description,
+        stock,
+        image,
+    } = req.body
+
+
+    const book = await Book.findByIdAndUpdate({_id: id}, {
+        title,
+        author,
+        price,
+        description,
+        stock,
+        image,
+    }, {new: true })
+
+    
+    throwIfNotFound(book);
 
     const bookResource = BookResource(book)
 
@@ -46,8 +89,10 @@ export const update = async (req,res)=>{
 export const remove = async (req,res)=>{
     const { id } = req.params
 
-    const book = await BookRepository.remove(id)
+    const book = await Book.findByIdAndDelete({_id: id});
     
+    throwIfNotFound(book);
+
     const bookResource = BookResource(book)
 
     res.json(bookResource);
