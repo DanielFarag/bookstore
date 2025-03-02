@@ -12,6 +12,7 @@ import {
 } from "./src/infrastructure/middlewares/index.js";
 
 import authRoutes from "./src/routes/auth.routes.js";
+import userRoutes from "./src/routes/user.routes.js";
 import indexRouter from "./src/routes/index.js";
 import booksRouter from "./src/routes/books.js";
 
@@ -37,6 +38,7 @@ app.use(cookieParser());
 app.use(express.static(join(__dirname, "public")));
 
 app.use(authRoutes);
+app.use(userRoutes);
 app.use("/emails", indexRouter);
 app.use("/api/books", authenticate, authorizeRole("admin"), booksRouter);
 app.use("/", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
