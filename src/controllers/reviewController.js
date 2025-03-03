@@ -1,4 +1,5 @@
 import Review from '../models/review.js';
+import Book from '../models/book.js';
 import validateReview from '../validation/reviewValidation.js';
 
 export const createReview = async (req, res) => {
@@ -6,8 +7,13 @@ export const createReview = async (req, res) => {
     if (error) return res.status(400).json({ error: error.details[0].message });
 
     try {
+        const book = await Book.findById(req.body.book);
+                if (!book) {
+                    console.error(" Book not found:", req.body.book);
+                    return res.status(400).json({ error: "Book not found" });
+                }
         const review = new Review({
-            user: req.user._id,
+            user: req.user.id,
             book: req.body.book,
             rating: req.body.rating,
             review: req.body.review
@@ -18,6 +24,8 @@ export const createReview = async (req, res) => {
         res.status(500).json({ error: 'Internal server error' });
     }
 };
+
+
 
 export const getReviewsByBook = async (req, res) => {
     try {
@@ -36,7 +44,7 @@ export const updateReview = async (req, res) => {
         const review = await Review.findById(req.params.reviewId);
         if (!review) return res.status(404).json({ error: 'Review not found' });
         
-        if (review.user.toString() !== req.user._id.toString()) {
+        if (review.user.toString() !== req.user.id.toString()) {
             return res.status(403).json({ error: 'Unauthorized to update this review' });
         }
 
@@ -54,7 +62,7 @@ export const deleteReview = async (req, res) => {
         const review = await Review.findById(req.params.reviewId);
         if (!review) return res.status(404).json({ error: 'Review not found' });
         
-        if (review.user.toString() !== req.user._id.toString()) {
+        if (review.user.toString() !== req.user.id.toString()) {
             return res.status(403).json({ error: 'Unauthorized to delete this review' });
         }
         

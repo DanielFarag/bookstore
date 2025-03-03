@@ -29,7 +29,6 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const app = express();
 
 connectDB();
-
 app.set("view engine", "pug");
 app.set("views", join(__dirname, "views"));
 

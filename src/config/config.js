@@ -8,7 +8,7 @@ const config = {
   env: process.env.NODE_ENV || "development",
   port: process.env.PORT || 3000,
   mongoose: {
-    url: `mongodb://${HOST}:${PORT}/${DB}`,
+    url: process.env.MONGO_URI,
     options: {
       useNewUrlParser: true,
       useUnifiedTopology: true,
