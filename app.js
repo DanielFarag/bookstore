@@ -15,6 +15,8 @@ import authRoutes from "./src/routes/auth.routes.js";
 import userRoutes from "./src/routes/user.routes.js";
 import indexRouter from "./src/routes/index.js";
 import booksRouter from "./src/routes/books.js";
+import reviewRoutes from "./src/routes/reviewRoutes.js";
+
 
 import { fileURLToPath } from "url";
 import {
@@ -41,9 +43,13 @@ app.use(authRoutes);
 app.use(userRoutes);
 app.use("/emails", indexRouter);
 app.use("/api/books", authenticate, authorizeRole("admin"), booksRouter);
+app.use("/api/reviews", reviewRoutes);
+
 app.use("/", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 app.use(Validation);
 app.use(NotFound);
 
 export default app;
+
+
