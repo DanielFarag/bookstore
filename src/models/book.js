@@ -12,7 +12,8 @@ const bookSchema = new Schema({
     },
     price: {
         type: Number,
-        require: true
+        require: true,
+        min: [0, 'Price must be a positive number']
     },
     description: {
         type: String,
@@ -20,7 +21,8 @@ const bookSchema = new Schema({
     },
     stock: {
         type: Number,
-        require: true
+        require: true,
+        min: [0, 'Stock must be a positive number'],
     },
     image: {
         type: String,
