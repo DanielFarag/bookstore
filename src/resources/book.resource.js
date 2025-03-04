@@ -1,7 +1,12 @@
 export const BookResource = (book)=>{
     return {
         id: book._id,
-        title: book.title
+        title:book.title,
+        author:book.author,
+        price:book.price,
+        description:book.description,
+        stock:book.stock,
+        image:book.image,
     }
 }
 

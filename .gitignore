@@ -137,3 +137,7 @@ dist
 
 
 project-requirement.txt
+Notes.md
+*.odt
+*.pdf
+public/uploads/*

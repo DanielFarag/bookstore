@@ -1,3 +1,5 @@
+import multer from 'multer';
+
 export default (err,req,res,next)=>{
     if (err.name === "ValidationError") {
         return res.status(422).json({ 
@@ -6,6 +8,16 @@ export default (err,req,res,next)=>{
                 type: e.type,
                 message: e.message
             })) 
+        });
+    }
+
+    if (err.message == "image_not_defined") {
+        return res.status(422).json({ 
+            errors: [{
+                key: "image",
+                type: "required",
+                message: "image not provided"
+            }]
         });
     }
     next(err)
