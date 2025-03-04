@@ -1,0 +1,676 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Book Store API",
+        "version": "1.0.0",
+        "description": "API documentation for managing books in the store"
+    },
+    "servers": [
+        {
+            "url": "http://localhost:3001",
+            "description": "server"
+        }
+    ],
+    "components": {
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "scheme": "bearer",
+                "bearerFormat": "JWT"
+            }
+        },
+        "schemas": {
+            "Book": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "example": "67bf79a343fba91baeeff7bc"
+                    },
+                    "name": {
+                        "type": "string",
+                        "example": "John Doe"
+                    }
+                }
+            },
+            "UnauthorizedError": {
+                "type": "object",
+                "properties": {
+                    "message": {
+                        "type": "string",
+                        "example": "Unauthorized to access this resource"
+                    }
+                }
+            },
+
+            "errors": {
+                "type": "object",
+                "properties": {
+                    "errors": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "key": {
+                                    "type": "string",
+                                    "example": "email"
+                                },
+                                "type": {
+                                    "type": "string",
+                                    "example": "any.required"
+                                },
+                                "message": {
+                                    "type": "string",
+                                    "example": "Email is required"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "security": [
+        {
+            "bearerAuth": []
+        }
+    ],
+    "tags": [
+        {
+            "name": "Auth",
+            "description": "Manage Auth Resource"
+        },
+        {
+            "name": "Books",
+            "description": "Manage Books Resource"
+        }
+    ],
+    "paths": {
+        "/api/register": {
+            "post": {
+                "summary": "Create a user",
+                "tags": [
+                    "Auth"
+                ],
+                "description": "Create a new user.",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "example": "test@gmail.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "example": "123456789"
+                                    },
+                                    "name": {
+                                        "type": "string",
+                                        "example": "username"
+                                    },
+                                    "role": {
+                                        "type": "string",
+                                        "enum": [
+                                            "user",
+                                            "admin"
+                                        ],
+                                        "example": "admin"
+                                    },
+                                    "isActive": {
+                                        "type": "boolean",
+                                        "example": true
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "422": {
+                        "description": "User creation failed due to validation issues.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "errors": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "key": {
+                                                        "type": "string",
+                                                        "example": "email"
+                                                    },
+                                                    "type": {
+                                                        "type": "string",
+                                                        "example": "any.required"
+                                                    },
+                                                    "message": {
+                                                        "type": "string",
+                                                        "example": "Email is required"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "201": {
+                        "description": "User resource created.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": {
+                                            "type": "string",
+                                            "example": "67bf79a343fba91baeeff7bc"
+                                        },
+                                        "email": {
+                                            "type": "string",
+                                            "example": "test@gmail.com"
+                                        },
+                                        "name": {
+                                            "type": "string",
+                                            "example": "username"
+                                        },
+                                        "role": {
+                                            "type": "string",
+                                            "example": "admin"
+                                        },
+                                        "isActive": {
+                                            "type": "boolean",
+                                            "example": false
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/login": {
+            "post": {
+                "summary": "Login user",
+                "tags": [
+                    "Auth"
+                ],
+                "description": "Login user.",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "example": "test@gmail.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "example": "123456789"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "403": {
+                        "description": "Account is inactive.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Account is inactive"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Login failed.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Login failed"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Invalid Email or password.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Invalid Email or password"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "Return user with authentication token",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Login successful"
+                                        },
+                                        "token": {
+                                            "type": "string",
+                                            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9"
+                                        },
+                                        "payload": {
+                                            "type": "object",
+                                            "properties": {
+                                                "id": {
+                                                    "type": "string",
+                                                    "example": "67bf79a343fba91baeeff7bc"
+                                                },
+                                                "name": {
+                                                    "type": "string",
+                                                    "example": "username"
+                                                },
+                                                "role": {
+                                                    "type": "string",
+                                                    "example": "admin"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/books": {
+            "get": {
+                "summary": "Retrieve a list of books",
+                "tags": [
+                    "Books"
+                ],
+                "description": "Get a list of all books available on the system.",
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "page",
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        },
+                        "required": false,
+                        "description": "The page number for pagination."
+                    },
+                    {
+                        "in": "query",
+                        "name": "perPage",
+                        "schema": {
+                            "type": "integer",
+                            "example": 10
+                        },
+                        "required": false,
+                        "description": "The number of books per page."
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "A list of books.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Book"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "User is unauthorized to perform this action [only admin is allowed].",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UnauthorizedError"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "summary": "Create a book",
+                "tags": [
+                    "Books"
+                ],
+                "description": "Create a new book.",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "title": {
+                                        "type": "string",
+                                        "example": "book title"
+                                    },
+                                    "author": {
+                                        "type": "string",
+                                        "example": "Author Name"
+                                    },
+                                    "price": {
+                                        "type": "number",
+                                        "example": 50
+                                    },
+                                    "stock": {
+                                        "type": "number",
+                                        "example": 4
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "book description sample"
+                                    },
+                                    "image": {
+                                        "type": "string",
+                                        "format": "binary"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "422": {
+                        "description": "Book is unprocessible due to validation issues.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "$ref": "#/components/schemas/errors"
+
+                                }
+                            }
+                        }
+                    },
+                    "201": {
+                        "description": "Book resource created.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": {
+                                            "type": "string",
+                                            "example": "67c01b6f244132f808539e28"
+                                        },
+                                        "title": {
+                                            "type": "string",
+                                            "example": "Book title"
+                                        },
+                                        "author": {
+                                            "type": "string",
+                                            "example": "Book author"
+                                        },
+                                        "price": {
+                                            "type": "number",
+                                            "example": 10
+                                        },
+                                        "stock": {
+                                            "type": "number",
+                                            "example": 20
+                                        },
+                                        "description": {
+                                            "type": "string",
+                                            "example": "book description"
+                                        },
+                                        "image": {
+                                            "type": "string",
+                                            "example": "url"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/books/{id}": {
+            "get": {
+                "summary": "Retrieve a book resource",
+                "tags": [
+                    "Books"
+                ],
+                "description": "Get a book resource using id.",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "67c01b6f244132f808539e28"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "A book resource.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "name": {
+                                            "type": "string",
+                                            "example": "John Doe"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Book not found.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "record not found"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "summary": "Update a book",
+                "tags": [
+                    "Books"
+                ],
+                "description": "Update a book.",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "67c01b6f244132f808539e28"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "title": {
+                                        "type": "string",
+                                        "example": "book title"
+                                    },
+                                    "author": {
+                                        "type": "string",
+                                        "example": "Author Name"
+                                    },
+                                    "price": {
+                                        "type": "number",
+                                        "example": 50
+                                    },
+                                    "stock": {
+                                        "type": "number",
+                                        "example": 4
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "book description sample"
+                                    },
+                                    "image": {
+                                        "type": "string",
+                                        "format": "binary"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "A book resource.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": {
+                                            "type": "string",
+                                            "example": "67bf79a343fba91baeeff7bc"
+                                        },
+                                        "name": {
+                                            "type": "string",
+                                            "example": "John Doe"
+                                        },
+                                        "email": {
+                                            "type": "string",
+                                            "example": "test@gmail.com"
+                                        },
+                                        "role": {
+                                            "type": "string",
+                                            "example": "admin"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Book not found.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "record not found"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Delete a book",
+                "tags": [
+                    "Books"
+                ],
+                "description": "Delete a book.",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "67bf79a343fba91baeeff7bc"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Delete book.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": {
+                                            "type": "string",
+                                            "example": "67bf79a343fba91baeeff7bc"
+                                        },
+                                        "name": {
+                                            "type": "string",
+                                            "example": "John Doe"
+                                        },
+                                        "email": {
+                                            "type": "string",
+                                            "example": "test@gmail.com"
+                                        },
+                                        "role": {
+                                            "type": "string",
+                                            "example": "admin"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
