@@ -8,7 +8,6 @@ import { connectDB, swaggerDocs } from "./src/infrastructure/services/index.js";
 import {
   NotFound,
   Validation,
-  UserIs,
 } from "./src/infrastructure/middlewares/index.js";
 
 import authRoutes from "./src/routes/auth.routes.js";
@@ -19,10 +18,6 @@ import reviewRoutes from "./src/routes/reviewRoutes.js";
 
 
 import { fileURLToPath } from "url";
-import {
-  authenticate,
-  authorizeRole,
-} from "./src/infrastructure/middlewares/auth.middleware.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -41,7 +36,7 @@ app.use(express.static(join(__dirname, "public")));
 app.use(authRoutes);
 app.use(userRoutes);
 app.use("/emails", indexRouter);
-app.use("/api/books", authenticate, authorizeRole("admin"), booksRouter);
+app.use("/api/books", booksRouter);
 app.use("/api/reviews", reviewRoutes);
 
 app.use("/", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
