@@ -1,0 +1,17 @@
+name: Start Deploy
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout codes
+        uses: actions/checkout@v3
+
+      - name: Start Deployment
+        run: echo "Initalize Deployment"
