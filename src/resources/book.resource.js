@@ -6,7 +6,7 @@ export const BookResource = (book)=>{
         price:book.price,
         description:book.description,
         stock:book.stock,
-        image:book.image,
+        image:book.fullPath,
     }
 }
 

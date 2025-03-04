@@ -28,4 +28,8 @@ const bookSchema = new Schema({
     }
 })
 
+bookSchema.virtual('fullPath').get(function() {
+    return `/uploads/${this.image}`;
+});
+
 export default new model("Book", bookSchema)
