@@ -8,7 +8,7 @@ RUN npm install --production
 
 COPY . .
 
-RUN rm .env .env.example
+RUN if [ -f .env ]; then rm -f .env; fi
 
 EXPOSE 3000
 
