@@ -1,7 +1,7 @@
 import { BooksCollection, BookResource } from "../resources/index.js";
 import { Book } from "../models/index.js"
 import { throwIfNotFound } from "../infrastructure/helpers/index.js";
-
+import { mailer } from "../infrastructure/services/index.js";
 
 export const index = async (req,res)=>{
     let { page, perPage } = req.query;
@@ -53,6 +53,8 @@ export const store = async (req,res)=>{
     })
 
     const bookResource = BookResource(book)
+
+    mailer.notifyAllUsers(book);
 
     res.status(201).json(bookResource);
 }

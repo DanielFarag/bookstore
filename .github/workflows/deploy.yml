@@ -13,5 +13,13 @@ jobs:
       - name: Checkout codes
         uses: actions/checkout@v3
 
+      # Check the project api [ lampda method ]
+        # Create lampda method
+          # check if the instnace is up and running
+
+      # Check the project endpoint
       - name: Start Deployment
         run: echo "Initalize Deployment"
+      
+      - name: Delpoy Application Into
+        run: echo "Start deploying the server"
