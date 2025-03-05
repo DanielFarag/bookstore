@@ -2,6 +2,9 @@ import express, { json, urlencoded } from "express";
 import { join, dirname } from "path";
 import cookieParser from "cookie-parser";
 import logger from "morgan";
+import morgan from 'morgan';
+import fs from 'fs';
+import path from 'path';
 import swaggerUi from "swagger-ui-express";
 
 import { connectDB, swaggerDocs } from "./src/infrastructure/services/index.js";
@@ -27,6 +30,11 @@ import {
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 const app = express();
+
+const accessLogStream = fs.createWriteStream(path.join('access.log'), { flags: 'a' });
+
+app.use(morgan('combined', { stream: accessLogStream })); 
+app.use(morgan('dev')); 
 
 connectDB();
 app.set("view engine", "pug");
