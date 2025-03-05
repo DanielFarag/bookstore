@@ -42,7 +42,6 @@
                     }
                 }
             },
-
             "errors": {
                 "type": "object",
                 "properties": {
@@ -340,6 +339,56 @@
                         },
                         "required": false,
                         "description": "The number of books per page."
+                    },
+                    {
+                        "in": "query",
+                        "name": "title",
+                        "schema": {
+                            "type": "string",
+                            "example": "boot title"
+                        },
+                        "required": false,
+                        "description": "Filter books by title."
+                    },
+                    {
+                        "in": "query",
+                        "name": "author",
+                        "schema": {
+                            "type": "string",
+                            "example": "author name"
+                        },
+                        "required": false,
+                        "description": "Filter books by author."
+                    },
+                    {
+                        "in": "query",
+                        "name": "description",
+                        "schema": {
+                            "type": "string",
+                            "example": "book description"
+                        },
+                        "required": false,
+                        "description": "Filter books by description."
+                    },
+                    {
+                        "in": "query",
+                        "name": "minStock",
+                        "schema": {
+                            "type": "integer",
+                            "example": 5
+                        },
+                        "required": false,
+                        "description": "Filter books with a minimum stock."
+                    },
+                    {
+                        "in": "query",
+                        "name": "maxStock",
+                        "schema": {
+                            "type": "integer",
+                            "example": 50
+                        },
+                        "required": false,
+                        "description": "Filter books with a maximum stock."
                     }
                 ],
                 "responses": {
@@ -418,7 +467,6 @@
                                 "schema": {
                                     "type": "object",
                                     "$ref": "#/components/schemas/errors"
-
                                 }
                             }
                         }

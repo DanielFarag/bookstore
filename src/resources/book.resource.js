@@ -13,7 +13,6 @@ export const BookResource = (book)=>{
 export const BooksCollection = (books, query)=>{
     return {
         data: books.map(BookResource),
-        page: query.page ? Number(query.page) : 1,
-        perPage: query.perPage ? Number(query.perPage) : 10,
+        query
     }
 }
