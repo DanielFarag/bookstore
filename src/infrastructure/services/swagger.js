@@ -1,23 +1,9 @@
-import swaggerJsDoc from 'swagger-jsdoc';
+import fs from 'fs';
+import path from "path";
 
-const HOST=process.env.APP_HOST
-const PORT=process.env.APP_PORT
 
-const swaggerOptions = {
-    swaggerDefinition: {
-        openapi: '3.0.0',
-        info: {
-            title: 'Book Store',
-            version: '1.0.0',
-            description: 'API documentation',
-        },
-        servers: [
-            {
-                url: `http://${HOST}:${PORT}`,
-            },
-        ],
-    },
-    apis: ['./src/routes/*.js'],
-};
+const jsonPath = path.join(process.cwd(), 'src', 'swagger', 'books.json');
+const swaggerDocs = JSON.parse(fs.readFileSync(jsonPath, 'utf-8'));
 
-export default swaggerJsDoc(swaggerOptions);
+
+export default swaggerDocs;

@@ -31,14 +31,17 @@ export const show = async (req,res)=>{
 
 
 export const store = async (req,res)=>{
+    
+    if (!req.file) throw new Error("image_not_defined");
+
     const {
         title,
         author,
         price,
         description,
         stock,
-        image,
     } = req.body
+
 
     const book = await Book.insertOne({
         title,
@@ -46,7 +49,7 @@ export const store = async (req,res)=>{
         price,
         description,
         stock,
-        image,
+        image: req.file.filename,
     })
 
     const bookResource = BookResource(book)
@@ -64,7 +67,6 @@ export const update = async (req,res)=>{
         price,
         description,
         stock,
-        image,
     } = req.body
 
 
@@ -74,7 +76,7 @@ export const update = async (req,res)=>{
         price,
         description,
         stock,
-        image,
+        image: req.file?.filename,
     }, {new: true })
 
     
