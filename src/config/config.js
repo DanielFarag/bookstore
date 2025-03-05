@@ -1,10 +1,13 @@
 import "dotenv/config";
 
+
+const auth = process.env.MONGO_USER ? `${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@` : "";
+
 const config = {
   env: process.env.NODE_ENV || "development",
   port: process.env.PORT || 3000,
   mongoose: {
-    url: `mongodb://${process.env.MONGO_HOST}:${process.env.MONGO_PORT}/${process.env.MONGO_DB}`,
+    url: `mongodb://${auth}${process.env.MONGO_HOST}:${process.env.MONGO_PORT}/${process.env.MONGO_DB}?authSource=admin`,
     options: {
       useNewUrlParser: true,
       useUnifiedTopology: true,

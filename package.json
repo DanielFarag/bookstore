@@ -4,9 +4,9 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "start": "node -r dotenv/config ./bin/www",
-    "dev": "nodemon -r dotenv/config ./bin/www",
-    "seed": "node -r dotenv/config seed.js"
+    "start": "node ./bin/www",
+    "dev": "nodemon ./bin/www",
+    "seed": "node  seed.js"
   },
   "dependencies": {
     "@faker-js/faker": "^9.5.0",
