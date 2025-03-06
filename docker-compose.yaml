@@ -1,8 +1,6 @@
-version: '3.8'
-
 services:
   web:
-    build: .
+    image: ghcr.io/danielfarag/bookstorenode:latest
     ports:
       - "8000:3000"
     environment:
