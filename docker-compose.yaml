@@ -2,7 +2,7 @@ services:
   web:
     image: ghcr.io/danielfarag/bookstorenode:latest
     ports:
-      - "8000:3000"
+      - "80:3000"
     environment:
       DEBUG: bookstore:*
       
@@ -26,6 +26,7 @@ services:
       - db
     networks:
       - mynetwork
+    restart: unless-stopped
 
   db:
     image: mongo
@@ -37,6 +38,7 @@ services:
       - mynetwork
     expose:
       - "27017"
+    restart: unless-stopped
 
 networks:
   mynetwork:

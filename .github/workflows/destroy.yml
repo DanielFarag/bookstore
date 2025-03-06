@@ -1,0 +1,50 @@
+name: EC2 Management & Trigger Pipeline
+
+on:
+  schedule:
+    - cron: '*/5 * * * *'
+
+jobs:
+  ec2-management:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Configure AWS CLI
+        run: |
+          aws configure set aws_access_key_id ${{ secrets.AWS_KEY_ID }}
+          aws configure set aws_secret_access_key ${{ secrets.AWS_KEY_SECRET }}
+          aws configure set region ${{ secrets.AWS_REGION }}
+      
+      - name: Check EC2 Instance Status
+        id: ec2_status
+        run: |
+          STATE=$(aws ec2 describe-instances \
+            --instance-ids ${{ secrets.INSTANCE_ID }} \
+            --query 'Reservations[0].Instances[0].State.Name' \
+            --output text)
+          echo "Instance state: $STATE"
+          echo "status=$STATE" >> $GITHUB_ENV
+
+      - name: Check if an Hour Has Passed
+        if: env.status == 'running'
+        run: |
+          LAST_REQUEST=$(aws ec2 describe-tags \
+            --filters "Name=resource-id,Values=${{ secrets.INSTANCE_ID }}" "Name=key,Values=Last_Request" \
+            --query "Tags[0].Value" --output text)
+
+
+          echo "last_request=$LAST_REQUEST" >> $GITHUB_ENV
+
+
+          CURRENT_TIMESTAMP=$(date +%s)
+          TIME_DIFF=$((CURRENT_TIMESTAMP - LAST_REQUEST))
+
+          if [ $TIME_DIFF -gt 3600 ]; then
+            echo "hour_passed=true" >> $GITHUB_ENV
+          else
+            echo "hour_passed=false" >> $GITHUB_ENV
+          fi
+
+      - name: Start EC2 Instance if Stopped
+        if: env.hour_passed == 'true'
+        run: |
+          aws ec2 stop-instances --instance-ids ${{ secrets.INSTANCE_ID }}
