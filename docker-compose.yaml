@@ -1,0 +1,45 @@
+services:
+  web:
+    image: ghcr.io/danielfarag/bookstorenode:latest
+    ports:
+      - "80:3000"
+    environment:
+      DEBUG: bookstore:*
+      
+      MONGO_HOST: db
+      MONGO_PORT: 27017
+      MONGO_DB: bookstore
+      MONGO_USER: root
+      MONGO_PASSWORD: password
+      
+      JWT_SECRET: fdklgjfsdlfjf
+      JWT_EXPIRATION: 86400
+
+
+      MAIL_SENDER: iti_bookstore@iti.com
+      MAIL_HOST: sandbox.smtp.mailtrap.io
+      MAIL_PORT: 2525
+      MAIL_USERNAME: 
+      MAIL_PASSWORD: 
+
+    depends_on:
+      - db
+    networks:
+      - mynetwork
+    restart: unless-stopped
+
+  db:
+    image: mongo
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: password
+      MONGO_INITDB_DATABASE: bookstore
+    networks:
+      - mynetwork
+    expose:
+      - "27017"
+    restart: unless-stopped
+
+networks:
+  mynetwork:
+    driver: bridge

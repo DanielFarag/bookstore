@@ -12,7 +12,13 @@ export const register = async (req, res) => {
     const user = new User(req.body);
     user.save();
 
-    const token = jwt.sign({ id: user._id }, config.jwt.secret, {
+    const payload = {
+      id: user._id,
+      name: user.name,
+      role: user.role,
+    };
+
+    const token = jwt.sign(payload, config.jwt.secret, {
       expiresIn: "1h",
     });
 
@@ -38,7 +44,7 @@ export const login = async (req, res) => {
       "+password"
     );
     if (!user || !user.isPasswordMatch(req.body.password)) {
-      res.status(401).json({ message: "Invalid Email or password" });
+      return res.status(401).json({ message: "Invalid Email or password" });
     }
 
     if (!user.isActive) {

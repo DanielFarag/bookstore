@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real-Time Reviews</title>
+</head>
+<body>
+    <h1>Reviews</h1>
+    <ul id="reviewList"></ul>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const socket = io();
+        socket.on("reviewCreated", (review) => {
+            console.log("New review added:", review);
+            const li = document.createElement("li");
+            li.textContent = `Rating: ${review.rating} - ${review.review}`;
+            li.id = review._id;
+            reviewList.appendChild(li);
+        });
+
+        socket.on("reviewUpdated", (review) => {
+            console.log("Review updated:", review);
+            const li = document.getElementById(review._id);
+            if (li) {
+                li.textContent = `Rating: ${review.rating} - ${review.review}`;
+            }
+        });
+
+        socket.on("reviewDeleted", (data) => {
+            console.log("Review deleted:", data.reviewId);
+            const li = document.getElementById(data.reviewId);
+            if (li) {
+                li.remove();
+            }
+        });
+        
+    </script>
+</body>
+</html>

@@ -1,7 +1,7 @@
 import { faker } from '@faker-js/faker';
-import { Book } from "./models/index.js"
+import { Book } from "./src/models/index.js"
 
-import { connectDB }  from './infrastructure/services/index.js';
+import { connectDB }  from './src/infrastructure/services/index.js';
 import { disconnect } from 'mongoose';
 
 

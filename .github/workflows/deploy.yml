@@ -1,0 +1,73 @@
+name: Start Deploy
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout codes
+        uses: actions/checkout@v3
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: danielfarag
+          password: ${{ secrets.AUTH_TOKEN }}
+
+      - name: Build Docker image
+        run: docker build -t ghcr.io/danielfarag/bookstorenode:latest .
+  
+      - name: Push Docker image to GitHub Container Registry
+        run: docker push ghcr.io/danielfarag/bookstorenode:latest
+
+
+      - name: Configure AWS CLI
+        run: |
+          aws configure set aws_access_key_id ${{ secrets.AWS_KEY_ID }}
+          aws configure set aws_secret_access_key ${{ secrets.AWS_KEY_SECRET }}
+          aws configure set region ${{ secrets.AWS_REGION }}
+    
+      - name: Deploy entry point [static file for redirection]
+        run: |
+          aws s3 cp ./public/deployment/index.html s3://iti-bookstore
+
+      - name: Check if EC2 instance is running
+        id: ec2_status
+        run: |
+          INSTANCE_ID="${{ secrets.INSTANCE_ID }}"
+          STATUS=$(aws ec2 describe-instances --instance-ids $INSTANCE_ID --query "Reservations[*].Instances[*].State.Name" --output text)
+          echo "Instance status: $STATUS"
+          echo "status=$STATUS" >> $GITHUB_ENV
+
+
+      - name: Start EC2 instance if not running
+        if: env.status != 'running'
+        run: |
+          INSTANCE_ID="${{ secrets.INSTANCE_ID }}"
+          aws ec2 start-instances --instance-ids $INSTANCE_ID
+          echo "Starting instance..."
+          
+          aws ec2 wait instance-running --instance-ids $INSTANCE_ID
+          echo "Instance is now running."
+
+      - name: Get EC2 Public IP Address
+        id: get_ip
+        run: |
+          INSTANCE_ID="${{ secrets.INSTANCE_ID }}"
+          PUBLIC_IP=$(aws ec2 describe-instances --instance-ids $INSTANCE_ID --query "Reservations[*].Instances[*].PublicIpAddress" --output text)
+          echo "Public IP: $PUBLIC_IP"
+          echo "public_ip=$PUBLIC_IP" >> $GITHUB_ENV
+
+      - name: SSH into EC2 and restart service
+        uses: appleboy/ssh-action@v1.2.1
+        with:
+          host: ${{ env.public_ip }}
+          username: "ubuntu"
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: sudo systemctl restart project-startup.service

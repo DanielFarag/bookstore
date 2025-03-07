@@ -3,14 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <title>S3 Deploy</title>
 </head>
 <body>
-    <button onclick="deploy()">Start Deploy Into EC2</button>
+    <h4>Start Deploy Into EC2 </h4>
+    <p id="status"></p>
+    
     <script>
-        function deploy(){
-            alert("Start deploy") // todo
-        }
+        const lambda = "https://8uu2x8k8ja.execute-api.us-east-1.amazonaws.com/default/startEc2OnRequest"
+        const seconds = 10
+        const message = "Please wait while server is building [refresh each "+ seconds +" seconds]"
+        // aws s3 cp index.html s3://iti-bookstore
+        
+        axios.get(lambda)
+            .then(res => {
+                if(res.data.state="running" && res.data.ip_address != ""){
+                    const host = "http://" + res.data.ip_address
+                    axios.get(host).then(e => {
+                        window.location = host;
+                    }).catch(err => {
+                        document.getElementById("status").innerText = message
+                        setTimeout(() => {
+                            window.location.reload()
+                        }, seconds * 1000)
+                    })
+                }else{
+                    document.getElementById("status").innerText = message
+                    setTimeout(() => {
+                        window.location.reload()
+                    }, seconds * 1000)
+                }
+            })
+            .catch(err => {
+                alert("Failed to deploy")
+            })
     </script>
 </body>
 </html>
