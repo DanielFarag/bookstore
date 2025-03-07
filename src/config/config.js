@@ -5,7 +5,7 @@ const auth = process.env.MONGO_USER ? `${process.env.MONGO_USER}:${process.env.M
 
 const config = {
   env: process.env.NODE_ENV || "development",
-  port: process.env.PORT || 3000,
+  port: process.env.PORT || 3001,
   mongoose: {
     url: `mongodb://${auth}${process.env.MONGO_HOST}:${process.env.MONGO_PORT}/${process.env.MONGO_DB}?authSource=admin`,
     options: {
