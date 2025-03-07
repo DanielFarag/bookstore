@@ -6,6 +6,7 @@ import morgan from 'morgan';
 import fs from 'fs';
 import path from 'path';
 import swaggerUi from "swagger-ui-express";
+import rateLimit from "express-rate-limit";
 
 import { connectDB, swaggerDocs } from "./src/infrastructure/services/index.js";
 import {
@@ -32,6 +33,14 @@ app.use(morgan('combined', { stream: accessLogStream }));
 app.use(morgan('dev')); 
 
 connectDB();
+
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, 
+  max: 100, 
+  message: { error: "Too many requests, please try again later." },
+});
+
+app.use(limiter);
 app.set("view engine", "pug");
 app.set("views", join(__dirname, "views"));
 

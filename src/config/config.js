@@ -6,7 +6,7 @@ const DB = process.env.MONGO_DB;
 
 const config = {
   env: process.env.NODE_ENV || "development",
-  port: process.env.PORT || 3000,
+  port: process.env.PORT || 3001,
   mongoose: {
     url: process.env.MONGO_URI,
     options: {
