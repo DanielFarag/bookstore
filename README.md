@@ -105,21 +105,21 @@
 ---
 
 ## Topics for Research
-- Payment gateway integration.
 - Email notifications using `nodemailer`.
 - Uploading Files with Multer.
 - Running Cron Jobs (node-cron).
 - Logging with Winston & Morgan.
-- OAuth2 and Social Login (Google, GitHub, Facebook).
 - Rate Limiting with express-rate-limit.
-- Caching with Redis.
 - Full text search.
+- Deployment to cloud platforms.
+- Caching with Redis.
+- OAuth2 and Social Login (Google, GitHub, Facebook).
 - Role-Based Access Control (RBAC).
 - Access Control Lists (ACLs).
 - Session Management (express-session, connect-mongo).
 - Single Active Session Restriction.
 - Real-time features with WebSockets.
-- Deployment to cloud platforms.
+- Payment gateway integration.
 
 
 ## Documents

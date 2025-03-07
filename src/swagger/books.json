@@ -7,7 +7,7 @@
     },
     "servers": [
         {
-            "url": "http://localhost:3001",
+            "url": "/",
             "description": "server"
         }
     ],
@@ -42,7 +42,6 @@
                     }
                 }
             },
-
             "errors": {
                 "type": "object",
                 "properties": {
@@ -81,8 +80,16 @@
             "description": "Manage Auth Resource"
         },
         {
+            "name": "Users",
+            "description": "Manage Users Resource"
+        },
+        {
             "name": "Books",
             "description": "Manage Books Resource"
+        },
+        {
+            "name": "Reviews",
+            "description": "Manage Reviews Resource"
         }
     ],
     "paths": {
@@ -313,6 +320,297 @@
                 }
             }
         },
+        "/api/users/me": {
+            "get": {
+                "summary": "Get current user details",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "tags": [
+                    "Auth"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "User details",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "email": {
+                                            "type": "string",
+                                            "example": "user@example.com"
+                                        },
+                                        "name": {
+                                            "type": "string",
+                                            "example": "John Doe"
+                                        },
+                                        "role": {
+                                            "type": "string",
+                                            "enum": [
+                                                "user",
+                                                "admin"
+                                            ],
+                                            "example": "user"
+                                        },
+                                        "isActive": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "createdAt": {
+                                            "type": "string",
+                                            "format": "date-time",
+                                            "example": "2024-12-01T12:34:56.789Z"
+                                        },
+                                        "updatedAt": {
+                                            "type": "string",
+                                            "format": "date-time",
+                                            "example": "2024-12-01T12:34:56.789Z"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                }
+            },
+            "patch": {
+                "summary": "Update current user details",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "tags": [
+                    "Auth"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "John Doe"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "example": "user@example.com"
+                                    }
+                                },
+                                "required": [
+                                    "name",
+                                    "email"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "User details updated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "email": {
+                                            "type": "string",
+                                            "example": "user@example.com"
+                                        },
+                                        "name": {
+                                            "type": "string",
+                                            "example": "John Doe"
+                                        },
+                                        "role": {
+                                            "type": "string",
+                                            "enum": [
+                                                "user",
+                                                "admin"
+                                            ],
+                                            "example": "user"
+                                        },
+                                        "isActive": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "createdAt": {
+                                            "type": "string",
+                                            "format": "date-time",
+                                            "example": "2024-12-01T12:34:56.789Z"
+                                        },
+                                        "updatedAt": {
+                                            "type": "string",
+                                            "format": "date-time",
+                                            "example": "2024-12-01T12:34:56.789Z"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid input"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Delete current user account",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "tags": [
+                    "Auth"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "User account deleted successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "User account deleted successfully"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "User not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "User not found"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Failed to delete user account",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Failed to delete user account"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                }
+            }
+        },
+        "/api/users": {
+            "get": {
+                "summary": "Get all users",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "tags": [
+                    "Users"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of all users",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "email": {
+                                                "type": "string",
+                                                "example": "user@example.com"
+                                            },
+                                            "name": {
+                                                "type": "string",
+                                                "example": "John Doe"
+                                            },
+                                            "role": {
+                                                "type": "string",
+                                                "enum": [
+                                                    "user",
+                                                    "admin"
+                                                ],
+                                                "example": "user"
+                                            },
+                                            "isActive": {
+                                                "type": "boolean",
+                                                "example": true
+                                            },
+                                            "createdAt": {
+                                                "type": "string",
+                                                "format": "date-time",
+                                                "example": "2024-12-01T12:34:56.789Z"
+                                            },
+                                            "updatedAt": {
+                                                "type": "string",
+                                                "format": "date-time",
+                                                "example": "2024-12-01T12:34:56.789Z"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Failed to get users",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Failed to get users"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Unauthorized"
+                    }
+                }
+            }
+        },
         "/api/books": {
             "get": {
                 "summary": "Retrieve a list of books",
@@ -340,6 +638,56 @@
                         },
                         "required": false,
                         "description": "The number of books per page."
+                    },
+                    {
+                        "in": "query",
+                        "name": "title",
+                        "schema": {
+                            "type": "string",
+                            "example": "boot title"
+                        },
+                        "required": false,
+                        "description": "Filter books by title."
+                    },
+                    {
+                        "in": "query",
+                        "name": "author",
+                        "schema": {
+                            "type": "string",
+                            "example": "author name"
+                        },
+                        "required": false,
+                        "description": "Filter books by author."
+                    },
+                    {
+                        "in": "query",
+                        "name": "description",
+                        "schema": {
+                            "type": "string",
+                            "example": "book description"
+                        },
+                        "required": false,
+                        "description": "Filter books by description."
+                    },
+                    {
+                        "in": "query",
+                        "name": "minStock",
+                        "schema": {
+                            "type": "integer",
+                            "example": 5
+                        },
+                        "required": false,
+                        "description": "Filter books with a minimum stock."
+                    },
+                    {
+                        "in": "query",
+                        "name": "maxStock",
+                        "schema": {
+                            "type": "integer",
+                            "example": 50
+                        },
+                        "required": false,
+                        "description": "Filter books with a maximum stock."
                     }
                 ],
                 "responses": {
@@ -418,7 +766,6 @@
                                 "schema": {
                                     "type": "object",
                                     "$ref": "#/components/schemas/errors"
-
                                 }
                             }
                         }
@@ -663,6 +1010,485 @@
                                         "role": {
                                             "type": "string",
                                             "example": "admin"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/reviews": {
+            "post": {
+                "summary": "Create a review",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "tags": [
+                    "Reviews"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "book": {
+                                        "type": "string",
+                                        "description": "ID of the book being reviewed",
+                                        "example": "64f1e1f8e3b8e3d5f5e7a1e2"
+                                    },
+                                    "rating": {
+                                        "type": "number",
+                                        "description": "Rating for the book (1-5)",
+                                        "minimum": 1,
+                                        "maximum": 5,
+                                        "example": 4
+                                    },
+                                    "review": {
+                                        "type": "string",
+                                        "description": "Review text",
+                                        "maxLength": 500,
+                                        "example": "A very insightful book!"
+                                    }
+                                },
+                                "required": [
+                                    "book",
+                                    "rating",
+                                    "review"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Review created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "user": {
+                                            "type": "string",
+                                            "description": "ID of the user who created the review",
+                                            "example": "64f1e1f8e3b8e3d5f5e7a1e2"
+                                        },
+                                        "book": {
+                                            "type": "string",
+                                            "description": "ID of the reviewed book",
+                                            "example": "64f1e1f8e3b8e3d5f5e7a1e2"
+                                        },
+                                        "rating": {
+                                            "type": "number",
+                                            "description": "Rating given to the book",
+                                            "example": 4
+                                        },
+                                        "review": {
+                                            "type": "string",
+                                            "description": "Review content",
+                                            "example": "A very insightful book!"
+                                        },
+                                        "createdAt": {
+                                            "type": "string",
+                                            "format": "date-time",
+                                            "example": "2024-12-01T12:34:56.789Z"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "\"rating\" must be a number between 1 and 5"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Book not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Book not found"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Failed to create review"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                }
+            }
+        },
+        "/api/reviews/books/{bookId}/reviews": {
+            "get": {
+                "summary": "Get reviews by book ID",
+                "tags": [
+                    "Reviews"
+                ],
+                "parameters": [
+                    {
+                        "name": "bookId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "64f1e1f8e3b8e3d5f5e7a1e2"
+                        },
+                        "description": "ID of the book to get reviews for"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of reviews for the book",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "user": {
+                                                "type": "string",
+                                                "description": "ID of the user who created the review",
+                                                "example": "64f1e1f8e3b8e3d5f5e7a1e2"
+                                            },
+                                            "book": {
+                                                "type": "string",
+                                                "description": "ID of the reviewed book",
+                                                "example": "64f1e1f8e3b8e3d5f5e7a1e2"
+                                            },
+                                            "rating": {
+                                                "type": "number",
+                                                "description": "Rating given to the book",
+                                                "example": 4
+                                            },
+                                            "review": {
+                                                "type": "string",
+                                                "description": "Review content",
+                                                "example": "A very insightful book!"
+                                            },
+                                            "createdAt": {
+                                                "type": "string",
+                                                "format": "date-time",
+                                                "example": "2024-12-01T12:34:56.789Z"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Book not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Book not found"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Failed to get reviews"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/reviews/{reviewId}": {
+            "put": {
+                "summary": "Update a review",
+                "tags": [
+                    "Reviews"
+                ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "reviewId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "64f1e1f8e3b8e3d5f5e7a1e2"
+                        },
+                        "description": "ID of the review to update"
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "book": {
+                                        "type": "string",
+                                        "description": "ID of the book being reviewed",
+                                        "example": "64f1e1f8e3b8e3d5f5e7a1e2"
+                                    },
+                                    "rating": {
+                                        "type": "number",
+                                        "minimum": 1,
+                                        "maximum": 5,
+                                        "example": 4,
+                                        "description": "Rating for the book"
+                                    },
+                                    "review": {
+                                        "type": "string",
+                                        "maxLength": 500,
+                                        "example": "Updated review text",
+                                        "description": "Updated review content"
+                                    }
+                                },
+                                "required": [
+                                    "rating",
+                                    "review"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Review updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "user": {
+                                            "type": "string",
+                                            "example": "64f1e1f8e3b8e3d5f5e7a1e2"
+                                        },
+                                        "book": {
+                                            "type": "string",
+                                            "example": "64f1e1f8e3b8e3d5f5e7a1e2"
+                                        },
+                                        "rating": {
+                                            "type": "number",
+                                            "example": 4
+                                        },
+                                        "review": {
+                                            "type": "string",
+                                            "example": "Updated review text"
+                                        },
+                                        "createdAt": {
+                                            "type": "string",
+                                            "format": "date-time",
+                                            "example": "2024-12-01T12:34:56.789Z"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Rating must be between 1 and 5"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Unauthorized to update this review",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Unauthorized to update this review"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Review not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Review not found"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Internal server error"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Delete a review",
+                "tags": [
+                    "Reviews"
+                ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "reviewId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "64f1e1f8e3b8e3d5f5e7a1e2"
+                        },
+                        "description": "ID of the review to delete"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Review deleted successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Review deleted successfully"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Unauthorized to delete this review",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Unauthorized to delete this review"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Review not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Review not found"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Internal server error"
                                         }
                                     }
                                 }

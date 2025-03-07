@@ -1,15 +1,26 @@
 import { BooksCollection, BookResource } from "../resources/index.js";
 import { Book } from "../models/index.js"
 import { throwIfNotFound } from "../infrastructure/helpers/index.js";
-
+import { mailer } from "../infrastructure/services/index.js";
 
 export const index = async (req,res)=>{
-    let { page, perPage } = req.query;
-
-    page = page ?? 1
-    perPage = perPage ?? 10
+    let { page = 1, perPage = 10, title, author, description, minStock, maxStock} = req.query;
     
-    const books = await Book.find().skip((page-1) * perPage).limit(perPage)
+    page = parseInt(page) - 1;
+    perPage = parseInt(perPage);
+
+    const filter = {};
+
+    if (title) filter.title = new RegExp(title, 'i');
+    if (author) filter.author = new RegExp(author, 'i');
+    if (description) filter.description = new RegExp(description, 'i');
+    if (minStock || maxStock) {
+        filter.stock = {};
+        if (minStock) filter.stock.$gte = parseInt(minStock);
+        if (maxStock) filter.stock.$lte = parseInt(maxStock);
+    }
+
+    const books = await Book.find(filter).skip(page * perPage).limit(perPage)
 
     const booksCollection = BooksCollection(books, req.query)
 
@@ -53,6 +64,8 @@ export const store = async (req,res)=>{
     })
 
     const bookResource = BookResource(book)
+
+    mailer.notifyAllUsers(book);
 
     res.status(201).json(bookResource);
 }

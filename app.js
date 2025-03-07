@@ -4,6 +4,7 @@ import cookieParser from "cookie-parser";
 import logger from "morgan";
 import morgan from 'morgan';
 import fs from 'fs';
+import cors from 'cors';
 import path from 'path';
 import swaggerUi from "swagger-ui-express";
 import rateLimit from "express-rate-limit";
@@ -45,6 +46,7 @@ app.set("view engine", "pug");
 app.set("views", join(__dirname, "views"));
 
 app.use(logger("dev"));
+app.use(cors());
 app.use(json());
 app.use(urlencoded({ extended: false }));
 app.use(cookieParser());
