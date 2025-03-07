@@ -12,24 +12,6 @@
     <script src="/socket.io/socket.io.js"></script>
     <script>
         const socket = io();
-        const reviewList = document.getElementById("reviewList");
-
-        function fetchReviews() {
-            fetch("/api/reviews/books/BOOK_ID") // Replace BOOK_ID with an actual book ID
-                .then(response => response.json())
-                .then(reviews => {
-                    reviewList.innerHTML = "";
-                    reviews.forEach(review => {
-                        const li = document.createElement("li");
-                        li.textContent = `Rating: ${review.rating} - ${review.review}`;
-                        li.id = review._id;
-                        reviewList.appendChild(li);
-                    });
-                });
-        }
-
-        fetchReviews();
-
         socket.on("reviewCreated", (review) => {
             console.log("New review added:", review);
             const li = document.createElement("li");
@@ -53,6 +35,7 @@
                 li.remove();
             }
         });
+        
     </script>
 </body>
 </html>

@@ -20,7 +20,6 @@ export const createReview = async (req, res) => {
 
     await review.save();
     
-    // Emit event for new review
     io.emit("reviewCreated", review);
 
     res.status(201).json(review);
@@ -49,7 +48,6 @@ export const updateReview = async (req, res) => {
     review.review = req.body.review;
     await review.save();
 
-    // Emit event for updated review
     io.emit("reviewUpdated", review);
 
     res.status(200).json(review);
@@ -66,7 +64,6 @@ export const deleteReview = async (req, res) => {
     try {
         await Review.deleteOne({ _id: req.params.reviewId });
 
-        // Emit event for deleted review
         io.emit("reviewDeleted", { reviewId: req.params.reviewId });
 
         res.status(200).json({ message: "Review deleted successfully" });
