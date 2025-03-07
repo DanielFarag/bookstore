@@ -33,6 +33,91 @@
                     }
                 }
             },
+            "Cart": {
+                "type": "object",
+                "properties": {
+                    "items": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/CartItem"
+                        }
+                    },
+                    "totalItems": {
+                        "type": "integer",
+                        "example": 3
+                    },
+                    "totalPrice": {
+                        "type": "number",
+                        "example": 45.99
+                    }
+                }
+            },
+            "CartItem": {
+                "type": "object",
+                "properties": {
+                    "bookId": {
+                        "type": "string",
+                        "example": "64f1b1b1b1b1b1b1b1b1b1b1"
+                    },
+                    "quantity": {
+                        "type": "integer",
+                        "example": 2
+                    },
+                    "price": {
+                        "type": "number",
+                        "example": 19.99
+                    }
+                }
+            },
+            "Order": {
+                "type": "object",
+                "properties": {
+                    "_id": {
+                        "type": "string",
+                        "example": "64f1b1b1b1b1b1b1b1b1b1b1"
+                    },
+                    "userId": {
+                        "type": "string",
+                        "example": "64f1b1b1b1b1b1b1b1b1b1b1"
+                    },
+                    "orderDate": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2023-09-01T12:00:00Z"
+                    },
+                    "status": {
+                        "type": "string",
+                        "example": "pending"
+                    },
+                    "totalPrice": {
+                        "type": "number",
+                        "example": 45.99
+                    },
+                    "items": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/OrderItem"
+                        }
+                    }
+                }
+            },
+            "OrderItem": {
+                "type": "object",
+                "properties": {
+                    "bookId": {
+                        "type": "string",
+                        "example": "64f1b1b1b1b1b1b1b1b1b1b1"
+                    },
+                    "quantity": {
+                        "type": "integer",
+                        "example": 2
+                    },
+                    "price": {
+                        "type": "number",
+                        "example": 19.99
+                    }
+                }
+            },
             "UnauthorizedError": {
                 "type": "object",
                 "properties": {
@@ -90,15 +175,21 @@
         {
             "name": "Reviews",
             "description": "Manage Reviews Resource"
+        },
+        {
+            "name": "Cart",
+            "description": "Manage Cart Resource"
+        },
+        {
+            "name": "Orders",
+            "description": "Manage Orders Resource"
         }
     ],
     "paths": {
         "/api/register": {
             "post": {
                 "summary": "Create a user",
-                "tags": [
-                    "Auth"
-                ],
+                "tags": ["Auth"],
                 "description": "Create a new user.",
                 "requestBody": {
                     "required": true,
@@ -121,10 +212,7 @@
                                     },
                                     "role": {
                                         "type": "string",
-                                        "enum": [
-                                            "user",
-                                            "admin"
-                                        ],
+                                        "enum": ["user", "admin"],
                                         "example": "admin"
                                     },
                                     "isActive": {
@@ -207,9 +295,7 @@
         "/api/login": {
             "post": {
                 "summary": "Login user",
-                "tags": [
-                    "Auth"
-                ],
+                "tags": ["Auth"],
                 "description": "Login user.",
                 "requestBody": {
                     "required": true,
@@ -328,9 +414,7 @@
                         "bearerAuth": []
                     }
                 ],
-                "tags": [
-                    "Auth"
-                ],
+                "tags": ["Auth"],
                 "responses": {
                     "200": {
                         "description": "User details",
@@ -349,10 +433,7 @@
                                         },
                                         "role": {
                                             "type": "string",
-                                            "enum": [
-                                                "user",
-                                                "admin"
-                                            ],
+                                            "enum": ["user", "admin"],
                                             "example": "user"
                                         },
                                         "isActive": {
@@ -386,9 +467,7 @@
                         "bearerAuth": []
                     }
                 ],
-                "tags": [
-                    "Auth"
-                ],
+                "tags": ["Auth"],
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -405,10 +484,7 @@
                                         "example": "user@example.com"
                                     }
                                 },
-                                "required": [
-                                    "name",
-                                    "email"
-                                ]
+                                "required": ["name", "email"]
                             }
                         }
                     }
@@ -431,10 +507,7 @@
                                         },
                                         "role": {
                                             "type": "string",
-                                            "enum": [
-                                                "user",
-                                                "admin"
-                                            ],
+                                            "enum": ["user", "admin"],
                                             "example": "user"
                                         },
                                         "isActive": {
@@ -471,9 +544,7 @@
                         "bearerAuth": []
                     }
                 ],
-                "tags": [
-                    "Auth"
-                ],
+                "tags": ["Auth"],
                 "responses": {
                     "200": {
                         "description": "User account deleted successfully",
@@ -537,9 +608,7 @@
                         "bearerAuth": []
                     }
                 ],
-                "tags": [
-                    "Users"
-                ],
+                "tags": ["Users"],
                 "responses": {
                     "200": {
                         "description": "List of all users",
@@ -560,10 +629,7 @@
                                             },
                                             "role": {
                                                 "type": "string",
-                                                "enum": [
-                                                    "user",
-                                                    "admin"
-                                                ],
+                                                "enum": ["user", "admin"],
                                                 "example": "user"
                                             },
                                             "isActive": {
@@ -614,9 +680,7 @@
         "/api/books": {
             "get": {
                 "summary": "Retrieve a list of books",
-                "tags": [
-                    "Books"
-                ],
+                "tags": ["Books"],
                 "description": "Get a list of all books available on the system.",
                 "parameters": [
                     {
@@ -718,9 +782,7 @@
             },
             "post": {
                 "summary": "Create a book",
-                "tags": [
-                    "Books"
-                ],
+                "tags": ["Books"],
                 "description": "Create a new book.",
                 "requestBody": {
                     "required": true,
@@ -816,9 +878,7 @@
         "/api/books/{id}": {
             "get": {
                 "summary": "Retrieve a book resource",
-                "tags": [
-                    "Books"
-                ],
+                "tags": ["Books"],
                 "description": "Get a book resource using id.",
                 "parameters": [
                     {
@@ -872,9 +932,7 @@
             },
             "put": {
                 "summary": "Update a book",
-                "tags": [
-                    "Books"
-                ],
+                "tags": ["Books"],
                 "description": "Update a book.",
                 "parameters": [
                     {
@@ -972,9 +1030,7 @@
             },
             "delete": {
                 "summary": "Delete a book",
-                "tags": [
-                    "Books"
-                ],
+                "tags": ["Books"],
                 "description": "Delete a book.",
                 "parameters": [
                     {
@@ -1027,9 +1083,7 @@
                         "bearerAuth": []
                     }
                 ],
-                "tags": [
-                    "Reviews"
-                ],
+                "tags": ["Reviews"],
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -1056,11 +1110,7 @@
                                         "example": "A very insightful book!"
                                     }
                                 },
-                                "required": [
-                                    "book",
-                                    "rating",
-                                    "review"
-                                ]
+                                "required": ["book", "rating", "review"]
                             }
                         }
                     }
@@ -1160,9 +1210,7 @@
         "/api/reviews/books/{bookId}/reviews": {
             "get": {
                 "summary": "Get reviews by book ID",
-                "tags": [
-                    "Reviews"
-                ],
+                "tags": ["Reviews"],
                 "parameters": [
                     {
                         "name": "bookId",
@@ -1254,9 +1302,7 @@
         "/api/reviews/{reviewId}": {
             "put": {
                 "summary": "Update a review",
-                "tags": [
-                    "Reviews"
-                ],
+                "tags": ["Reviews"],
                 "security": [
                     {
                         "bearerAuth": []
@@ -1300,10 +1346,7 @@
                                         "description": "Updated review content"
                                     }
                                 },
-                                "required": [
-                                    "rating",
-                                    "review"
-                                ]
+                                "required": ["rating", "review"]
                             }
                         }
                     }
@@ -1410,9 +1453,7 @@
             },
             "delete": {
                 "summary": "Delete a review",
-                "tags": [
-                    "Reviews"
-                ],
+                "tags": ["Reviews"],
                 "security": [
                     {
                         "bearerAuth": []
@@ -1494,6 +1535,518 @@
                                 }
                             }
                         }
+                    }
+                }
+            }
+        },
+        "/api/cart": {
+            "get": {
+                "tags": ["Cart"],
+                "summary": "Get user's cart",
+                "description": "Retrieve the authenticated user's shopping cart",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Cart retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Cart"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized (missing or invalid token)"
+                    }
+                }
+            },
+            "delete": {
+                "tags": ["Cart"],
+                "summary": "Clear user's cart",
+                "description": "Remove all items from the authenticated user's cart",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Cart cleared successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Cart cleared successfully"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized (missing or invalid token)"
+                    }
+                }
+            }
+        },
+        "/api/cart/items": {
+            "post": {
+                "tags": ["Cart"],
+                "summary": "Add item to cart",
+                "description": "Add a book to the authenticated user's cart",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "bookId": {
+                                        "type": "string",
+                                        "example": "64f1b1b1b1b1b1b1b1b1b1b1"
+                                    },
+                                    "quantity": {
+                                        "type": "integer",
+                                        "example": 1
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Book added to cart successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Book added to cart successfully"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request (invalid input)"
+                    },
+                    "401": {
+                        "description": "Unauthorized (missing or invalid token)"
+                    },
+                    "404": {
+                        "description": "Book not found"
+                    }
+                }
+            }
+        },
+        "/api/cart/items/{bookId}": {
+            "put": {
+                "tags": ["Cart"],
+                "summary": "Update cart item quantity",
+                "description": "Update the quantity of a book in the authenticated user's cart",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "bookId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "64f1b1b1b1b1b1b1b1b1b1b1"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "quantity": {
+                                        "type": "integer",
+                                        "example": 2
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Cart item quantity updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Cart item quantity updated successfully"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request (invalid input)"
+                    },
+                    "401": {
+                        "description": "Unauthorized (missing or invalid token)"
+                    },
+                    "404": {
+                        "description": "Book not in cart"
+                    }
+                }
+            },
+            "delete": {
+                "tags": ["Cart"],
+                "summary": "Remove item from cart",
+                "description": "Remove a book from the authenticated user's cart",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "bookId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "64f1b1b1b1b1b1b1b1b1b1b1"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Book removed from cart successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Book removed from cart successfully"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized (missing or invalid token)"
+                    },
+                    "404": {
+                        "description": "Book not in cart"
+                    }
+                }
+            }
+        },
+        "/api/orders": {
+            "post": {
+                "tags": ["Orders"],
+                "summary": "Create order (checkout)",
+                "description": "Create a new order from the authenticated user's cart",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Order placed successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Order placed successfully"
+                                        },
+                                        "orderId": {
+                                            "type": "string",
+                                            "example": "64f1b1b1b1b1b1b1b1b1b1b1"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request (cart is empty or invalid input)"
+                    },
+                    "401": {
+                        "description": "Unauthorized (missing or invalid token)"
+                    }
+                }
+            },
+            "get": {
+                "tags": ["Orders"],
+                "summary": "List all orders (admin only)",
+                "description": "Retrieve a list of all orders (admin access required)",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer",
+                            "example": 10
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Orders retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "orders": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/Order"
+                                            }
+                                        },
+                                        "totalPages": {
+                                            "type": "integer",
+                                            "example": 5
+                                        },
+                                        "currentPage": {
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "totalOrders": {
+                                            "type": "integer",
+                                            "example": 50
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized (missing or invalid token)"
+                    },
+                    "403": {
+                        "description": "Forbidden (admin access required)"
+                    }
+                }
+            }
+        },
+        "/api/orders/me": {
+            "get": {
+                "tags": ["Orders"],
+                "summary": "List user's order history",
+                "description": "Retrieve the authenticated user's order history",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer",
+                            "example": 10
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Order history retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "orders": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/Order"
+                                            }
+                                        },
+                                        "totalPages": {
+                                            "type": "integer",
+                                            "example": 5
+                                        },
+                                        "currentPage": {
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "totalOrders": {
+                                            "type": "integer",
+                                            "example": 50
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized (missing or invalid token)"
+                    }
+                }
+            }
+        },
+        "/api/orders/{orderId}": {
+            "get": {
+                "tags": ["Orders"],
+                "summary": "Get order by ID",
+                "description": "Retrieve details of a specific order (user can access their own order, admin can access any order)",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "orderId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "64f1b1b1b1b1b1b1b1b1b1b1"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Order retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Order"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized (missing or invalid token)"
+                    },
+                    "403": {
+                        "description": "Forbidden (user cannot access another user's order)"
+                    },
+                    "404": {
+                        "description": "Order not found"
+                    }
+                }
+            }
+        },
+        "/api/orders/{orderId}/status": {
+            "patch": {
+                "tags": ["Orders"],
+                "summary": "Update order status (admin only)",
+                "description": "Update the status of an order (admin access required)",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "orderId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "64f1b1b1b1b1b1b1b1b1b1b1"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "status": {
+                                        "type": "string",
+                                        "example": "shipped"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Order status updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Order status updated successfully"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request (invalid status)"
+                    },
+                    "401": {
+                        "description": "Unauthorized (missing or invalid token)"
+                    },
+                    "403": {
+                        "description": "Forbidden (admin access required)"
+                    },
+                    "404": {
+                        "description": "Order not found"
                     }
                 }
             }

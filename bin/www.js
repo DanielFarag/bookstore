@@ -1,5 +1,9 @@
 #!/usr/bin/env node
 
+/**
+ * Module dependencies.
+ */
+
 import app from '../app.js';
 import debugLib from 'debug';
 import { createServer } from 'http';
