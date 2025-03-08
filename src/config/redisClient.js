@@ -1,6 +1,6 @@
 import redis from "redis";
 import "dotenv/config";
-import config from "./config";
+import config from "./config.js";
 
 let redisClient;
 
