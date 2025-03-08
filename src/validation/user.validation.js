@@ -10,7 +10,12 @@ export const registerValidation = Joi.object({
     .message(
       "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character"
     ),
+  password_confirmation: Joi.string()
+    .required()
+    .valid(Joi.ref("password"))
+    .messages({ "any.only": "Passwords do not match" }),
   role: Joi.string().valid("user", "admin").default("user"),
+  isActive: Joi.boolean().default(true)
 });
 
 export const loginValidation = Joi.object({
