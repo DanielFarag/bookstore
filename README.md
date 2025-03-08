@@ -77,5 +77,3 @@ npm run dev
 ```
 
 ---
-
-Would you like more details on how to use **Swagger**, **MailHog**, or the demo website in the documentation?
