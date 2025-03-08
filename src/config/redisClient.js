@@ -1,13 +1,16 @@
 import redis from "redis";
 import "dotenv/config";
+import config from "./config.js";
 
-export const redisClient = redis.createClient({
-  host: process.env.REDIS_HOST || "localhost",
-  port: process.env.REDIS_PORT || 6379,
-});
+
+export const redisClient = redis.createClient(config.redis);
 
 redisClient.on("error", (err) => {
   console.error("Redis Client Error", err);
+});
+
+redisClient.on("ready", () => {
+  console.log(`Redis Client Connected ${config.redis.url}`);
 });
 
 redisClient.connect().catch(console.error);

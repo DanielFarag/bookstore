@@ -22,8 +22,13 @@ services:
       MAIL_USERNAME: 
       MAIL_PASSWORD: 
 
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+
     depends_on:
       - db
+      - redis
+
     networks:
       - mynetwork
     restart: unless-stopped
@@ -38,6 +43,14 @@ services:
       - mynetwork
     expose:
       - "27017"
+    restart: unless-stopped
+
+  redis:
+    image: redis
+    networks:
+      - mynetwork
+    expose:
+      - "6379"
     restart: unless-stopped
 
 networks:

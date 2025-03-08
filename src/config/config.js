@@ -23,6 +23,9 @@ const config = {
     port: process.env.MAIL_PORT,
     username: process.env.MAIL_USERNAME,
     password: process.env.MAIL_PASSWORD,
+  },
+  redis:{
+    url: `redis://${process.env.REDIS_HOST || "localhost"}:${process.env.REDIS_PORT || 6379}`,
   }
 };
 
