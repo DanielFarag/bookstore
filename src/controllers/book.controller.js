@@ -45,7 +45,7 @@ export const index = async (req, res) => {
   page = parseInt(page) - 1
   perPage = parseInt(perPage)
 
-  const filter={}
+  const filter = { deletedAt: null };
   if (title) filter.title = new RegExp(title, 'i')
   if (author) filter.author = new RegExp(author, 'i')
   if (description) filter.description = new RegExp(description, 'i')
@@ -166,13 +166,14 @@ export const update = async (req, res) => {
 export const remove = async (req, res) => {
   const { id } = req.params;
 
-  const book = await Book.findByIdAndDelete({ _id: id });
+  const book = await Book.findByIdAndUpdate(
+      { _id: id },
+      { deletedAt: new Date() }
+  );
 
-  console.log(book)
   throwIfNotFound(book);
 
   const bookResource = BookResource(book);
-
 
   const cacheKey = `book:details:${id}`;
   await redisClient.del(cacheKey);
@@ -180,7 +181,7 @@ export const remove = async (req, res) => {
   const listCachePattern = `books:list:*`;
   const keys = await redisClient.keys(listCachePattern);
   if (keys.length > 0) {
-    await redisClient.del(...keys);
+      await redisClient.del(...keys);
   }
 
   res.json(bookResource);

@@ -27,7 +27,8 @@ const bookSchema = new Schema({
     image: {
         type: String,
         require: true
-    }
+    },
+    deletedAt: { type: Date, default: null },
 })
 
 bookSchema.virtual('fullPath').get(function() {

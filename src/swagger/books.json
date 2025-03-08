@@ -760,7 +760,7 @@
                     },
                     {
                         "in": "query",
-                        "name": "minStock",
+                        "name": "from_stock",
                         "schema": {
                             "type": "integer",
                             "example": 5
@@ -770,13 +770,33 @@
                     },
                     {
                         "in": "query",
-                        "name": "maxStock",
+                        "name": "to_stock",
                         "schema": {
                             "type": "integer",
                             "example": 50
                         },
                         "required": false,
                         "description": "Filter books with a maximum stock."
+                    },
+                    {
+                        "in": "query",
+                        "name": "from_price",
+                        "schema": {
+                            "type": "integer",
+                            "example": 5
+                        },
+                        "required": false,
+                        "description": "Filter books with a minimum Price."
+                    },
+                    {
+                        "in": "query",
+                        "name": "to_price",
+                        "schema": {
+                            "type": "integer",
+                            "example": 50
+                        },
+                        "required": false,
+                        "description": "Filter books with a maximum Price."
                     }
                 ],
                 "responses": {
