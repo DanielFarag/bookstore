@@ -13,7 +13,6 @@ import { NotFound, UnCaughtExceptions, Validation } from './src/infrastructure/m
 
 import authRoutes from './src/routes/auth.routes.js'
 import userRoutes from './src/routes/user.routes.js'
-import indexRouter from './src/routes/index.js'
 import booksRouter from './src/routes/books.js'
 import reviewRoutes from './src/routes/reviewRoutes.js'
 import cartRoutes from './src/routes/cart.js'
@@ -51,7 +50,6 @@ app.get('/mailhog', (req,res,next)=>{
     res.redirect(`http://${host}:8025`);
 })
 
-app.use('/emails', indexRouter)
 app.use('/api/books', booksRouter)
 app.use('/api/reviews', reviewRoutes)
 app.use('/api/cart', cartRoutes)

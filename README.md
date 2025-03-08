@@ -77,3 +77,5 @@ npm run dev
 ```
 
 ---
+
+![ERD](./erd.png)
