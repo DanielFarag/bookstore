@@ -1,0 +1,25 @@
+doctype html
+html(lang="en")
+    head
+        meta(charset="UTF-8")
+        meta(name="viewport", content="width=device-width, initial-scale=1.0")
+        title Order Confirmation - ITI Store
+        style.
+            body { font-family: Arial, sans-serif; padding: 20px; background-color: #f4f4f4; }
+            .container { max-width: 600px; margin: auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0px 2px 10px rgba(0,0,0,0.1); }
+            h3 { color: #4CAF50; }
+            p, li { color: #333; }
+            .order-details { background: #e7f3fe; padding: 10px; border-radius: 5px; }
+    body
+        .container
+            h3 Order Confirmation
+            p Thank you for your order! We're excited to get your items ready for you.
+            .order-details
+                h4 Order Summary:
+                ul
+                    li Order ID: #{orderId}
+                    li Total Amount: #{totalAmount}
+                    li Estimated Delivery: #{status}
+            p If you have any questions, feel free to contact us.
+            p Cheers,
+            p The ITI Store Team

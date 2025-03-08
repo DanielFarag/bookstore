@@ -17,9 +17,9 @@ services:
 
 
       MAIL_SENDER: iti_bookstore@iti.com
-      MAIL_HOST: sandbox.smtp.mailtrap.io
-      MAIL_PORT: 2525
-      MAIL_USERNAME: 
+      MAIL_HOST: mailhog
+      MAIL_PORT: 1025
+      MAIL_USERNAME:  
       MAIL_PASSWORD: 
 
       REDIS_HOST: redis
@@ -28,9 +28,10 @@ services:
     depends_on:
       - db
       - redis
+      - mailhog
 
     networks:
-      - mynetwork
+      - iti_bookstore
     restart: unless-stopped
 
   db:
@@ -40,7 +41,7 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: password
       MONGO_INITDB_DATABASE: bookstore
     networks:
-      - mynetwork
+      - iti_bookstore
     expose:
       - "27017"
     restart: unless-stopped
@@ -48,11 +49,21 @@ services:
   redis:
     image: redis
     networks:
-      - mynetwork
+      - iti_bookstore
     expose:
       - "6379"
     restart: unless-stopped
 
+
+  mailhog:
+    image: mailhog/mailhog
+    container_name: mailhog
+    ports:
+      - "1025:1025"
+      - "8025:8025"
+    networks:
+      - iti_bookstore
+
 networks:
-  mynetwork:
+  iti_bookstore:
     driver: bridge
