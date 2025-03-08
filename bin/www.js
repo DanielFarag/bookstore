@@ -8,6 +8,7 @@ import app from '../app.js';
 import debugLib from 'debug';
 import { createServer } from 'http';
 import { Server } from 'socket.io'; // Import socket.io
+import User from '../src/models/user.model.js';
 
 const debug = debugLib('bookstore:server');
 

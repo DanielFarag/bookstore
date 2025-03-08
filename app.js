@@ -9,7 +9,7 @@ import path from 'path'
 import swaggerUi from 'swagger-ui-express'
 
 import { connectDB, swaggerDocs } from './src/infrastructure/services/index.js'
-import { NotFound, Validation } from './src/infrastructure/middlewares/index.js'
+import { NotFound, UnCaughtExceptions, Validation } from './src/infrastructure/middlewares/index.js'
 
 import authRoutes from './src/routes/auth.routes.js'
 import userRoutes from './src/routes/user.routes.js'
@@ -33,7 +33,7 @@ app.use(morgan('combined', { stream: accessLogStream }))
 app.use(morgan('dev'))
 
 connectDB()
-app.set('view engine', 'pug')
+
 app.set('views', join(__dirname, 'views'))
 
 app.use(logger('dev'))
@@ -45,15 +45,22 @@ app.use(express.static(join(__dirname, 'public')))
 
 app.use(authRoutes)
 app.use(userRoutes)
+
+app.get('/mailhog', (req,res,next)=>{
+    const host = req.headers.host.split(':')[0]; 
+    res.redirect(`http://${host}:8025`);
+})
+
 app.use('/emails', indexRouter)
 app.use('/api/books', booksRouter)
 app.use('/api/reviews', reviewRoutes)
 app.use('/api/cart', cartRoutes)
 app.use('/api/orders', orderRoutes)
 
-app.use('/', swaggerUi.serve, swaggerUi.setup(swaggerDocs))
+app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs))
 
 app.use(Validation)
 app.use(NotFound)
+app.use(UnCaughtExceptions)
 
 export default app
