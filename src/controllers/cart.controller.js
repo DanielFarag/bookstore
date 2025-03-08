@@ -1,5 +1,6 @@
 import User from '../models/user.model.js'
 import Book from '../models/book.js'
+import { io } from "../../bin/www.js"; 
 
 // Get Cart
 export const getCart = async (req, res) => {
@@ -56,6 +57,9 @@ export const addItemToCart = async (req, res) => {
         user.cart.totalPrice += book.price * quantity
 
         await user.save()
+
+        io.emit("cartAdded");
+        
         res.status(200).json({
             message: 'Book added to cart successfully',
             cart: user.cart,
@@ -99,6 +103,9 @@ export const updateCartItemQuantity = async (req, res) => {
         user.cart.totalPrice += cartItem.price * (quantity - oldQuantity)
 
         await user.save()
+
+        io.emit("cartQuantityUpdated");
+
         res.status(200).json({
             message: 'Cart item quantity updated successfully',
             cart: user.cart,

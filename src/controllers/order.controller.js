@@ -2,6 +2,8 @@ import { throwIfNotFound } from '../infrastructure/helpers/index.js'
 import Order from '../models/order.js'
 import Book from '../models/book.js'
 import { OrdersCollection, OrderResource } from '../resources/index.js'
+import { io } from "../../bin/www.js"; 
+import { mailer } from "../infrastructure/services/index.js";
 
 export const createOrder = async (req, res) => {
     try {
@@ -51,6 +53,8 @@ export const createOrder = async (req, res) => {
         user.cart.totalItems = 0
         user.cart.totalPrice = 0
         await user.save()
+
+        mailer.new_order(order)
 
         res.status(201).json({
             message: 'Order placed successfully',
@@ -168,6 +172,10 @@ export const updateOrderStatus = async (req, res) => {
 
         order.status = status
         await order.save()
+
+        io.emit("orderStatusChanged");
+
+        mailer.order_updated(order)
 
         res.status(200).json({
             message: 'Order status updated successfully',
