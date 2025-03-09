@@ -56,7 +56,7 @@ The **BookStore** project is a **RESTful API** built with **Node.js**, **Express
 ## **Installation**
 1. **Clone the repository:**
 ```bash
-git clone https://github.com/yourusername/bookstore.git
+git clone https://github.com/danielfarag/bookstore.git
 cd bookstore
 ```
 
